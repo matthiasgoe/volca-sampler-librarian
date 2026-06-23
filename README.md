@@ -8,7 +8,7 @@ selection to the device in one pass.
 This is a fork of [**Volca Sampler**](https://github.com/benwiley4000/volca-sampler),
 an app created by [Ben Wiley](https://benwiley.org/). All of the actually hard parts 
 like Syro encoding, audio handling, and device transfer are his work; this fork
-only adds a different front-end on top. I made this mostly for myself. 
+only adds a different front-end on top. I made this mostly for myself with claude 
 
 > “volca sample” is a trademark of KORG Inc., who is not affiliated with this app.
 
