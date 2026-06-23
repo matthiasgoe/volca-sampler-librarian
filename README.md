@@ -15,8 +15,6 @@ only adds a different front-end on top. I made this mostly for myself.
 ## What this fork does
 
 - **Import many files at once** instead of one at a time.
-- **Persistent library** — imported samples and your slot layout are remembered
-  between sessions.
 - **0–99 slot grid** with drag-and-drop assignment; a sample stays in the
   library and can be placed in more than one slot.
 - **Batch transfer** of all or a selected subset of slots.
