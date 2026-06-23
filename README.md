@@ -1,8 +1,8 @@
 # Volca Sampler Librarian
 
 A simplified, librarian-style interface for loading samples onto the
-**volca sample**. Import a batch of audio files, keep them in a persistent
-library, preview them, drag each onto one of the 0–99 slots, and transfer your
+**volca sample v1**. It lets you import a batch of samples, keep them in a persistent
+library, play them, drag each onto one of the slots, and transfer your
 selection to the device in one pass.
 
 This is a fork of [**Volca Sampler**](https://github.com/benwiley4000/volca-sampler),
@@ -31,7 +31,7 @@ This project compiles a small WebAssembly module (the Korg Syro encoder) with
 time you build.
 
 ```bash
-# 1. install Emscripten (one time) — see https://emscripten.org/docs/getting_started/downloads.html
+# 1. install Emscripten (just once) — see https://emscripten.org/docs/getting_started/downloads.html
 #    e.g. via emsdk:
 #    git clone https://github.com/emscripten-core/emsdk.git
 #    cd emsdk && ./emsdk install latest && ./emsdk activate latest && source ./emsdk_env.sh && cd ..
@@ -51,7 +51,7 @@ required for the audio engine to work).
 To produce a static build instead, run `npm run build:normal` and serve the
 `build/` folder over HTTP.
 
-## Build a standalone macOS app
+## Build a standalone mac app
 
 ```bash
 chmod +x build-mac-app.sh
