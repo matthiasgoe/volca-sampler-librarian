@@ -33,7 +33,9 @@
     "deploy": "gh-pages -m '[skip ci] Updates' -d build",
     "test": "node test/syro-bindings.test.js | tap-spec-emoji",
     "eject": "react-scripts eject",
-    "zip": "rimraf build/Volca-Sampler-Offline.zip && rimraf Volca-Sampler-Offline && cp -r build Volca-Sampler-Offline && bestzip build/Volca-Sampler-Offline.zip Volca-Sampler-Offline/* && rimraf Volca-Sampler-Offline"
+    "zip": "rimraf build/Volca-Sampler-Offline.zip && rimraf Volca-Sampler-Offline && cp -r build Volca-Sampler-Offline && bestzip build/Volca-Sampler-Offline.zip Volca-Sampler-Offline/* && rimraf Volca-Sampler-Offline",
+    "electron:start": "electron .",
+    "electron:build": "npm run build:normal && electron-builder --mac"
   },
   "homepage": ".",
   "eslintConfig": {
@@ -71,12 +73,43 @@
     "express": "^4.17.1",
     "gh-pages": "^3.2.3",
     "mkdirp": "^1.0.4",
-    "node-sass": "^6.0.1",
     "pcm-convert": "^1.6.5",
     "puppeteer": "^13.5.1",
     "rimraf": "^5.0.5",
     "tap-spec-emoji": "^6.1.2",
     "tape": "^5.3.1",
-    "typescript": "^4.4.3"
+    "typescript": "^4.4.3",
+    "electron": "^31.7.6",
+    "electron-builder": "^24.13.3"
+  },
+  "main": "electron/main.js",
+  "description": "Desktop librarian app to organize and transfer samples to the volca sample.",
+  "author": {
+    "name": "Volca Sampler"
+  },
+  "build": {
+    "appId": "com.benwiley.volcasampler",
+    "productName": "Volca Sampler Librarian",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "build/**/*",
+      "electron/**/*"
+    ],
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "category": "public.app-category.music",
+      "identity": null,
+      "extendInfo": {
+        "NSMicrophoneUsageDescription": "Volca Sampler needs the microphone to record audio samples."
+      }
+    },
+    "dmg": {
+      "title": "Volca Sampler Librarian"
+    }
   }
 }

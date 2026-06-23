@@ -30,3 +30,9 @@ public/syro-worker.js
 public/syro-worker.wasm
 
 public/factory-samples.json
+
+# electron build output
+/dist
+
+# local emscripten (installed by build-mac-app.sh)
+/emsdk

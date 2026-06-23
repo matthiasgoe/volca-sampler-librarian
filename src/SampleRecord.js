@@ -276,9 +276,28 @@ function useMediaRecording(onRecordUpdate, onRecordFinish) {
   /** @type {React.ChangeEventHandler<HTMLInputElement>} */
   const importFile = useCallback(
     (e) => {
-      if (e.target.files && e.target.files.length) {
-        const file = e.target.files[0];
-        file.arrayBuffer().then(async (arrayBuffer) => {
+      if (!e.target.files || !e.target.files.length) {
+        return;
+      }
+      const files = Array.from(e.target.files);
+      // reset the input so picking the same file(s) again still triggers onChange
+      e.target.value = '';
+      (async () => {
+        setCaptureState('finalizing');
+        let anySilent = false;
+        let importedCount = 0;
+        /** @type {string[]} */
+        const skipped = [];
+        // import sequentially so each new sample is persisted in order
+        for (const file of files) {
+          /** @type {ArrayBuffer} */
+          let arrayBuffer;
+          try {
+            arrayBuffer = await file.arrayBuffer();
+          } catch (err) {
+            skipped.push(`${file.name} (could not be read)`);
+            continue;
+          }
           const audioFileBuffer = new Uint8Array(arrayBuffer);
           /**
            * @type {AudioBuffer}
@@ -287,21 +306,31 @@ function useMediaRecording(onRecordUpdate, onRecordFinish) {
           try {
             audioBuffer = await getAudioBufferForAudioFileData(audioFileBuffer);
           } catch (err) {
-            alert('Unsupported audio format detected');
-            return;
+            skipped.push(`${file.name} (unsupported audio format)`);
+            continue;
           }
           if (audioBuffer.length > 65 * audioBuffer.sampleRate) {
-            alert('Please select an audio file no more than 65 seconds long');
-            return;
+            skipped.push(`${file.name} (longer than 65 seconds)`);
+            continue;
           }
-          setCaptureState('finalizing');
           const result = await onRecordFinish(audioFileBuffer, file);
-          setCaptureState('ready');
           if (result === 'silent') {
-            setShowSilenceWarning(true);
+            anySilent = true;
+          } else {
+            importedCount++;
           }
-        });
-      }
+        }
+        setCaptureState('ready');
+        if (anySilent) {
+          setShowSilenceWarning(true);
+        }
+        if (skipped.length) {
+          alert(
+            `Imported ${importedCount} of ${files.length} file(s).\n\n` +
+              `Skipped:\n${skipped.join('\n')}`
+          );
+        }
+      })();
     },
     [onRecordFinish]
   );
@@ -741,9 +770,10 @@ function SampleRecord({
               }
             }}
           >
-            Import an audio file
+            Import audio file(s)
             <input
               hidden
+              multiple
               type="file"
               accept={ANY_FILE ? undefined : 'audio/*,video/*,.wav,.mp3,.ogg'}
               onChange={importFile}
